@@ -1,0 +1,1 @@
+console.log("SchemaCraft UI Loaded");
