@@ -42,17 +42,31 @@ def analyze_database(database_path):
         cursor.execute(f"PRAGMA table_info({table_name})")
         column_info = cursor.fetchall()
 
+        cursor.execute(f"PRAGMA foreign_key_list({table_name})")
+        foreign_keys = cursor.fetchall()
+
+        foreign_key_map = {}
+
+        for foreign_key in foreign_keys:
+
+            foreign_key_map[foreign_key[3]] = (
+                f"{foreign_key[2]}.{foreign_key[4]}"
+            )
+
         columns = []
 
         for column in column_info:
 
+            column_name = column[1]
+
             columns.append({
 
-                "name": column[1],
+                "name": column_name,
                 "type": column[2],
                 "nullable": "No" if column[3] else "Yes",
                 "default": column[4] if column[4] else "-",
-                "primary_key": "Yes" if column[5] else "No"
+                "primary_key": "Yes" if column[5] else "No",
+                "foreign_key": foreign_key_map.get(column_name, "-")
 
             })
 
