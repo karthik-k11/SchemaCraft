@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import os
 
+from database_reader import analyze_database
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
@@ -22,17 +24,31 @@ def allowed_file(filename):
 def home():
 
     message = ""
-    database_name = "No database loaded"
+
+    analysis = {
+
+        "database_name": "No database loaded",
+        "database_size": "--",
+        "total_tables": "--",
+        "total_views": "--",
+        "total_columns": "--",
+        "total_rows": "--",
+        "tables": []
+
+    }
 
     if request.method == "POST":
 
         if "database" not in request.files:
+
             message = "No file selected."
 
         else:
+
             file = request.files["database"]
 
             if file.filename == "":
+
                 message = "Please choose a database."
 
             elif allowed_file(file.filename):
@@ -44,16 +60,22 @@ def home():
 
                 file.save(save_path)
 
-                database_name = file.filename
-                message = "Database uploaded successfully."
+                analysis = analyze_database(save_path)
+
+                message = "Database analyzed successfully."
 
             else:
+
                 message = "Only SQLite databases are allowed."
 
     return render_template(
+
         "index.html",
+
         message=message,
-        database_name=database_name
+
+        analysis=analysis
+
     )
 
 
