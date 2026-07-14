@@ -66,13 +66,19 @@ def analyze_database(database_path):
                 "nullable": "No" if column[3] else "Yes",
                 "default": column[4] if column[4] else "-",
                 "primary_key": "Yes" if column[5] else "No",
-                "foreign_key": foreign_key_map.get(column_name, "-")
+                "foreign_key": foreign_key_map.get(
+                    column_name,
+                    "-"
+                )
 
             })
 
         total_columns += len(columns)
 
-        cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+        cursor.execute(
+            f"SELECT COUNT(*) FROM {table_name}"
+        )
+
         row_count = cursor.fetchone()[0]
 
         total_rows += row_count
@@ -80,7 +86,12 @@ def analyze_database(database_path):
         tables.append({
 
             "table_name": table_name,
+
             "row_count": row_count,
+
+            "sql_preview":
+                f"SELECT * FROM {table_name};",
+
             "columns": columns
 
         })
