@@ -145,6 +145,70 @@
 
 {% endif %}
 
+<h2 style="margin-top:40px;">
+    Data Dictionary
+</h2>
+
+{% for table in analysis.tables %}
+
+<div class="card" style="margin-top:20px;">
+
+    <h3>{{ table.table_name }}</h3>
+
+    <table border="1"
+           cellpadding="8"
+           cellspacing="0"
+           width="100%">
+
+        <tr>
+
+            <th>Column</th>
+            <th>Type</th>
+            <th>PK</th>
+            <th>FK</th>
+            <th>Nullable</th>
+            <th>Default</th>
+
+        </tr>
+
+        {% for column in table.columns %}
+
+        <tr>
+
+            <td>{{ column.name }}</td>
+            <td>{{ column.type }}</td>
+            <td>{{ column.primary_key }}</td>
+            <td>{{ column.foreign_key }}</td>
+            <td>{{ column.nullable }}</td>
+            <td>{{ column.default }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endfor %}
+
+
+<h2 style="margin-top:40px;">
+    SQL Preview
+</h2>
+
+{% for table in analysis.tables %}
+
+<div class="card" style="margin-top:20px;">
+
+<pre>
+{{ table.sql_preview }}
+</pre>
+
+</div>
+
+{% endfor %}
+
 </div>
 
 <script src="{{ url_for('static',
